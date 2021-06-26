@@ -1,0 +1,86 @@
+安装nvim：
+sudo apt-get install software-properties-common
+
+sudo apt-add-repository ppa:neovim-ppa/stable
+sudo apt-get update
+sudo apt-get install neovim
+
+# 安装最新版需要将stable -> unstale
+链接nvim到vim：sudo ln -s /usr/bin/nvim /usr/local/bin/vi
+
+安装pynvim:
+在安装anaconda(python3+)的前提下:
+pip install --user pynvim
+如果有多个conda环境，最好每个环境都安装pynvim，ranger，jedi等包；
+
+在系统python2环境下安装：
+系统可能没有pip2命令：sudo apt install python-pip，安装pip2;
+pip2 install --user pynvim
+
+安装node：
+sudo apt update
+sudo apt install nodejs
+sudo apt install npm
+
+安装的nim可能需要高版本的npm, 需要安装n来管理版本，npm版本过低可能会在:checkhealth的时候出错；
+sudo npm install -g n，
+sudo n 版本号，来管理版本，最好版本高一点，插件coco.nvim需要nodejs >= 10.12；
+
+安装之后：npm install -g neovim；可能需要sudo；
+如果使用代理，需要提前设置npm代理：npm config set proxy=http://127.0.0.1:8087；
+
+进入nvim之后:checkhealth，
+如果设置了代理可能会遇到ERROR: HTTP request failed: error: curl error with https://pypi.python.org/pypi/pynvim/json: 35；
+设置curl代理可解决:
+vim ~/.curlrc
+# 写入
+socks5 = "127.0.0.1:1024"
+
+再一次:checkhealth，
+出现ERROR: perl provider error:
+    - ADVICE:
+      - "Neovim::Ext" cpan module is not installed
+nvim稳定版不会有这个问题，0.5.0以下版本，没有check_perl()；
+
+安装perl：
+sudo apt install cpanminus
+下面这句不能加sudo，否则:checkhealth可能会读不到文件，
+cpanm Neovim::Ext
+不用sudo，会出现下面的提示警告，
+Can't write to /usr/local/share/perl/5.26.1 and /usr/local/bin: Installing modules to /home/laughing/perl5；
+再将安装路径写入~/.zshrc：
+echo 'eval $(perl -I $HOME/perl5/lib/perl5 -Mlocal::lib)' >>~/.zshrc
+如果出现：Can't locate local/lib.pm
+cpanm -l ~/perl5 local::lib
+即可解决
+
+之后再:checkhealth即可成功；
+
+
+后续：
+安装rnvimr插件，需要ranger >= 1.9.3;
+安装ranger:
+pip install ranger-fm
+
+安装vim-hexokinase插件，需要首先安装golang；
+
+
+ranger预览图片，需要安装ueberzug，pip install ueberzug，
+可能会报错，需要安装依赖项：
+sudo apt install libx11-dev
+sudo apt install libxext-dev
+
+neovim下设置剪切板与系统共享：
+sudo apt-get install xsel
+然后在nvim/init.vim中加入：
+set clipboard+=unnamedplus
+
+esc与caosLock互换：
+安装xmodmap
+在~/.xmodmap写入：
+remove Lock = Caps_Lock
+keycode 9 = Caps_Lock NoSymbol Caps_Lock
+keycode 66 = Escape NoSymbol Escape
+add Lock = Caps_Lock
+再在~/.zshrc中写入：
+xmodmap ~/.xmodmap
