@@ -1,0 +1,121 @@
+ls -d 显示文件夹
+ls, cat, cp, mv等命令后面可以跟多个目录/文件；
+
+
+type
+which
+man
+--help
+whatis
+alias
+alias name='string'
+
+重定向标准输出：
+系统默认是从键盘接受输入，输出到屏幕；
+>从头开始写入，>>追加写入；
+ll /usr/bin > output.txt 
+
+重定向标准错误：
+0,1,2分别为标准输入，输出，错误
+ll /usr/bin 2> ls-error.txt
+重定向标准输出和错误到同一个文件：
+首先重定向输出到文件，在重定向文件描述符2到文件描述符1，使用2>&1
+old: ll /usr/bin > ls-output.txt 2>&1 标准错误必须在标准输出之后，2>&1 >ls-output.txt则错误输出到屏幕；
+now: ll /usr/bin &> ls-output.txt
+
+处理不需要的输出, /dev/null接受输入，但不作任何处理：
+ll /bin/usr 2> /dev/null
+
+接受output.txt作为标准输入
+cat < output.txt, 等效于cat output.txt
+
+管道线"|": 一个命令的标准输出可以管道到另一个命令的标准输入；
+ll /usr/bin | less
+过滤器：
+ll /bin /usr/bin | sort | less
+ll /bin /usr/bin | sort | uniq | less, uniq去掉重复, uniq -d 显示去掉的重复数据；
+
+wc 打印行，字，字节数, -l 只报道行数；
+ll /bin /usr/bin | sort | uniq | wc -l 
+grep 匹配, -i 忽略大小写，-v只打印不匹配的项； 
+ll /bin /usr/bin | sort | uniq | grep zip 
+
+head/tail: 打印前10行和后10行内容，-n调整行数；
+head/tail -n 5 output.txt
+ls /usr/bin | tail -n 5
+tail -f 实时浏览文件：tail -f /var/log/messages
+
+tee：从stdin读取数据，并同时输出到stdout和文件
+ls /usr/bin | tee ls.txt | grep zip，将ls /usr/bin内容复制输入到ls.txt, 然后再屏幕上输出grep zip后的结果；
+
+
+echo: 展开
+echo /usr/*/share
+echo * 显示当前文件夹所有内容，echo .* 显示隐藏文件；
+算术展开：echo $((expression))  echo $((2 + 2)), echo $(($((5**2)) * 3))
+花括号展开：echo number_{1..5}
+mkdir {2007..2009}-0{1..9} {2007..2009}-{10..12}
+printenv 显示环境变量
+命令替换：
+echo $(ls)
+ls -l $(which cp)
+file $(ls /sr/bin/* | grep zip)
+file `ls /sr/bin/* | grep zip`
+
+将文本放在双引号中，shell使用的特殊字符，除了$,\,`之外，全部都失去特殊含义；
+单词分割机制会在单词中寻找空格,制表符,和换行符,并把它们看作单词之间的界定符, 将分割的单词看作是不同的参数；
+双引号可以避免单词分割机制;
+ll "two words.txt"
+mv "two words.txt" two_word.txt
+echo "$USER $((2+2)) $(cal)"
+
+单引号可以禁止展开特殊符号的:
+echo "text ~/*.txt {a,b} $(echo foo) $((2+2)) $USER"
+
+转义字符：\, 名字中包含特殊字符的，可以使用转义字符，比如\$；
+
+C-a/e: 移动光标到行首/行尾；
+C-f/b: 光标前移/后移；
+A-f/b: 光标前移/后移一个字；
+C-p/n: 相当于方向键上/下；
+C-d: 删除光标位置字符；
+C-l: 清屏；
+C-u/k: 剪切从光标位置到行首/行尾的文本；
+C-y: 将剪切的文本粘贴到光标位置；
+A-d: 剪切光标位置到词尾；
+A-Backspace: 剪切从光标位置到词头的文本；
+
+权限：
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

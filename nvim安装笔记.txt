@@ -84,3 +84,8 @@ keycode 66 = Escape NoSymbol Escape
 add Lock = Caps_Lock
 再在~/.zshrc中写入：
 xmodmap ~/.xmodmap
+
+
+coc-jedi配置jedi-language-server:
+如果报没有找到jedi-language-server的话，安装之后在CocConfig中设置：
+"jedi.executable.command": your path of jedi-language-server,
