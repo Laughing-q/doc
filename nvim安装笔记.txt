@@ -89,3 +89,5 @@ xmodmap ~/.xmodmap
 coc-jedi配置jedi-language-server:
 如果报没有找到jedi-language-server的话，安装之后在CocConfig中设置：
 "jedi.executable.command": your path of jedi-language-server,
+
+预览markdown需要安装：sudo npm install -g instant-markdown-d
