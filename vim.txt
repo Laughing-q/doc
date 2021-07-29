@@ -39,7 +39,8 @@ Practical Vim, by Drew Neil
 Read Drew Neil's Practical Vim.
 "
 
-yt, 将Practical Vim,复制到复制专用寄存器，然后<C-r>0把文本粘贴到光标所在位置，一般命令格式为<C-r>{register},{register}为想要插入的寄存器的名字
+yt, 将Practical Vim,复制到复制专用寄存器，然后<C-r>0把文本粘贴到光标所在位置，
+一般命令格式为<C-r>{register},{register}为想要插入的寄存器的名字
 <C-r><C-p>{register}: 更智能的粘贴，按原义插入寄存器内容并修正任何不必要的缩进
 
 <C-r>={expression}<CR>:表达式寄存器，输出expression的结果
