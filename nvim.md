@@ -88,10 +88,10 @@ Command Mode
 | autocmd BufEnter * silent! lcd %:p:h | 自动设置进入缓冲区时切换为当前文件所在文件夹 |
 
 
-#### coc-nvim
+#### coc-nvim(TODO)
 ```vim
-# pumvisible()表示是否有补全列表
-# 函数表示如果有补全列表则执行<C\->p, 否则执行<C\-h>
+" pumvisible()表示是否有补全列表
+" 函数表示如果有补全列表则执行<C\->p, 否则执行<C\-h>
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 ```
 | shortcut | command                        | motions            | mode |
@@ -101,6 +101,25 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 | <++>     | <++>                           | <++>               | <++> |
 | <++>     | <++>                           | <++>               | <++> |
 
+#### FZF
+需要安装fzf和fzf.vim
+| shortcut | command           | motions                              | mode |
+|----------|-------------------|--------------------------------------|------|
+| <C\-p>   | :Leaderf file<CR> | 查找该文件所在文件夹下的文件         | n    |
+| <C\-f>   | :Rg<CR>           | 在该文件夹下查找，可通过文件内容查找 | <++> |
+| <C\-h>   | :History<CR>      | 根据历史查找                         | <++> |
+| <C\w>    | :Buffers<CR>      | 查找缓冲区                           | <++> |
+| LEADER+; | :History:<CR>     | 命令行的历史                        | <++> |
+| <++>     | <++>              | <++>                                 | <++> |
+
+```vim
+" 设置<C-i>, <C-k>上下移动
+" 在.zshrc/.bashrc中设置
+export FZF_DEFAULT_OPTS="--bind ctrl-k:down,ctrl-i:up"
+
+也可以直接在init.vim中设置
+let g:fzf_bind = {'ctrl-k':'down', 'ctrl-i':'up'}
+```
 
 
 #### autocmd
