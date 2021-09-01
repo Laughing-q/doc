@@ -110,6 +110,8 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 | <C\-h>   | :History<CR>      | 根据历史查找                         | <++> |
 | <C\w>    | :Buffers<CR>      | 查找缓冲区                           | <++> |
 | LEADER+; | :History:<CR>     | 命令行的历史                        | <++> |
+| <C\-d>     | :BD              | 删除缓冲区                                 | <++> |
+| <++>     | <++>              | <++>                                 | <++> |
 | <++>     | <++>              | <++>                                 | <++> |
 
 ```vim
@@ -121,6 +123,81 @@ export FZF_DEFAULT_OPTS="--bind ctrl-k:down,ctrl-i:up"
 let g:fzf_bind = {'ctrl-k':'down', 'ctrl-i':'up'}
 ```
 
+#### Leaderf
+| shortcut | motions     |
+|----------|-------------|
+| <C\-p>   | 打开Leaderf |
+以下命令基于Leaderf已打开
+copy from [https://github.com/Yggdroot/LeaderF](https://github.com/Yggdroot/LeaderF) 
+| Command                    | Description
+| -------                    | -----------
+| `<C-C>`<br>`<ESC>`         | quit from LeaderF
+| `<C-R>`                    | switch between fuzzy search mode and regex mode
+| `<C-F>`                    | switch between full path search mode and name only search mode
+| `<Tab>`                    | switch to normal mode
+| `<C-V>`<br>`<S-Insert>`    | paste from clipboard
+| `<C-U>`                    | clear the prompt
+| `<C-W>`                    | delete the word before the cursor in the prompt
+| `<C-J>`                    | move the cursor downward in the result window
+| `<C-K>`                    | move the cursor upward in the result window
+| `<Up>`/`<Down>`            | recall last/next input pattern from history
+| `<2-LeftMouse>`<br>`<CR>`  | open the file under cursor or selected(when multiple files are selected)
+| `<C-X>`                    | open in horizontal split window
+| `<C-]>`                    | open in vertical split window
+| `<C-T>`                    | open in new tabpage
+| `<C-\>`                    | show a prompt enable to choose split window method: vertical, horizontal, tabpage, etc
+| `<F5>`                     | refresh the cache
+| `<C-LeftMouse>`<br>`<C-S>` | select multiple files
+| `<S-LeftMouse>`            | select consecutive multiple files
+| `<C-A>`                    | select all files
+| `<C-L>`                    | clear all selections
+| `<BS>`                     | delete the preceding character in the prompt
+| `<Del>`                    | delete the current character in the prompt
+| `<Home>`                   | move the cursor to the begin of the prompt
+| `<End>`                    | move the cursor to the end of the prompt
+| `<Left>`                   | move the cursor one character to the left in the prompt
+| `<Right>`                  | move the cursor one character to the right in the prompt
+| `<C-P>`                    | preview the result
+| `<C-Up>`                   | scroll up in the popup preview window
+| `<C-Down>`                 | scroll down in the popup preview window
+
+#### vim-visual-multi
+| shortcut           | motions            |
+|--------------------|--------------------|
+| <C\-k>             | 打开选中模式并选中 |
+| :help visual-multi | 查看文档           |
+| :h vm-mappings.txt | 查看映射文档       |
+
+以下命令基于visual-multi已打开
+| shortcut | motions    |
+|----------|------------|
+| k        | 向下移动   |
+| i        | 向上移动   |
+| j        | 向左移动   |
+| l        | 向右移动   |
+| =        | 下一个     |
+| -        | 上一个     |
+| q        | 取消该选中 |
+| <C\-n>   | 跳过选中   |
+| <++>     | <++>       |
+
+#### Far.vim(TODO)
+跨文件查找替换
+```vim
+" 查找替换
+:Far {pattern} {replace-with} {file-mask} [params]
+" 仅查找
+:F {pattern} {file-mask} [params]
+" 执行替换操作
+:Fardo
+```
+| shortcut | motions    |
+|----------|------------|
+| LEADER+f | 跨文件查找 |
+| <++>     | <++>       |
+
+#### Bullets.vim(TODO)
+<++>
 
 #### autocmd
 :autocmd [group] events pattern [nested] command
@@ -133,3 +210,41 @@ let g:fzf_bind = {'ctrl-k':'down', 'ctrl-i':'up'}
 
 :autocmd FileWritePre * :callDateInsert()<CR>
 在保存文件的时候自动执行函数callDateInsert()
+
+#### function
+```vim
+fu[nction][!] {name}([arguments]) [range] [abort] [dict] [closure]
+" name必须以字母数字或_开头, 开头必须大写或以s:开头
+" s:表示局部变量
+```
+
+```vim
+redir 重定向
+redir > {file} "重定向到file
+redir! > {file} "强制覆盖file
+redir >> {file} "追加
+redir END "结束重定向
+
+" 返回缓冲区列表的函数
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+" 删除一个buffer
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+" 定义命令行调用函数function
+" :BD调用
+command! BD call function
+
+```
+
+
+
+
+
