@@ -1,10 +1,46 @@
+
+<!-- TOC GFM -->
+
+- [Vim shortcut](#vim-shortcut)
+	+ [shortcut](#shortcut)
+	+ [Command Mode](#command-mode)
+- [Plugs](#plugs)
+	+ [Window management](#window-management)
+	+ [Tab management](#tab-management)
+	+ [Markdown](#markdown)
+	+ [Others](#others)
+	+ [GitGutter](#gitgutter)
+	+ [coc-nvim](#coc-nvim)
+	+ [FZF](#fzf)
+	+ [Leaderf](#leaderf)
+	+ [vim-visual-multi](#vim-visual-multi)
+	+ [Far.vim](#farvim)
+	+ [Bullets.vim](#bulletsvim)
+	+ [fzf.gitignore](#fzfgitignore)
+	+ [tabular](#tabular)
+	+ [vim-after-object](#vim-after-object)
+	+ [suda.vim](#sudavim)
+	+ [vim-markdown-toc](#vim-markdown-toc)
+	+ [rnvimr](#rnvimr)
+	+ [vim-rooter](#vim-rooter)
+	+ [AsyncRun](#asyncrun)
+	+ [agit.vim](#agitvim)
+- [Vim](#vim)
+	+ [autocmd](#autocmd)
+	+ [function](#function)
+	+ [cnoreabbrev](#cnoreabbrev)
+
+<!-- /TOC -->
+
+### Vim shortcut
+#### shortcut
 | shortcut   | command             | motions          | mode |
 |------------|---------------------|------------------|------|
 | Y          | y$                  | 复制到行尾       | n    |
 | Y          | "+y                 | 复制到系统剪切板 | v    |
 | <LEADER>dw | /\(\<\w\+\>\)\_s*\1 | 找到邻近的重复词 |      |
-| <LEADER>tt | :%s/    /\t/g       | 使用tab代替空格     | n    |
-| <LEADER>tt | :s/    /\t/g        | 使用tab代替空格     | v    |
+| <LEADER>tt | :%s/    /\t/g       | 使用tab代替空格  | n    |
+| <LEADER>tt | :s/    /\t/g        | 使用tab代替空格  | v    |
 | <LEADER>o  | za                  | 折叠             | <++> |
 | <++>       | <++>                | <++>             | <++> |
 | <++>       | <++>                | <++>             | <++> |
@@ -12,9 +48,7 @@
 | <++>       | <++>                | <++>             | <++> |
 | <++>       | <++>                | <++>             | <++> |
 
-
-Command Mode
-
+#### Command Mode
 | shortcut | command      | motions |
 |----------|--------------|---------|
 | <C\-a>   | \<Home\>     | <++>    |
@@ -26,6 +60,7 @@ Command Mode
 | <M\-b>   | \<S\-Left\>  | <++>    |
 | <M\-w>   | \<S\-Right\> | <++>    |
 
+### Plugs
 #### Window management
 | shortcut | command        | motions                  | mode |
 |----------|----------------|--------------------------|------|
@@ -88,7 +123,7 @@ Command Mode
 | autocmd BufEnter * silent! lcd %:p:h | 自动设置进入缓冲区时切换为当前文件所在文件夹 |
 
 
-#### coc-nvim(TODO)
+#### coc-nvim
 ```vim
 " pumvisible()表示是否有补全列表
 " 函数表示如果有补全列表则执行<C\->p, 否则执行<C\-h>
@@ -119,7 +154,7 @@ inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 " 在.zshrc/.bashrc中设置
 export FZF_DEFAULT_OPTS="--bind ctrl-k:down,ctrl-i:up"
 
-也可以直接在init.vim中设置
+也可以直接在init.vim中设置, 还行不行，还是需要.zshrc配置
 let g:fzf_bind = {'ctrl-k':'down', 'ctrl-i':'up'}
 ```
 
@@ -181,7 +216,8 @@ copy from [https://github.com/Yggdroot/LeaderF](https://github.com/Yggdroot/Lead
 | <C\-n>   | 跳过选中   |
 | <++>     | <++>       |
 
-#### Far.vim(TODO)
+
+#### Far.vim
 跨文件查找替换
 ```vim
 " 查找替换
@@ -191,13 +227,122 @@ copy from [https://github.com/Yggdroot/LeaderF](https://github.com/Yggdroot/Lead
 " 执行替换操作
 :Fardo
 ```
-| shortcut | motions    |
-|----------|------------|
-| LEADER+f | 跨文件查找 |
-| <++>     | <++>       |
+| shortcut | command                                | motions      |
+|----------|----------------------------------------|--------------|
+| LEADER+f | :F  **/*<left><left><left><left><left> | 跨文件查找   |
+| zL       | expand_all                             | 展开所有     |
+| zJ       | collapse_all                           | 收起所有     |
+| zl       | expand                                 | <++>         |
+| zj       | collapse                               | <++>         |
+| X        | exclude_all                            | 去除选中全部 |
+| O        | include_all                            | <++>         |
+| x        | exclude                                | <++>         |
+| o        | include                                | <++>         |
+| p        | open_preview                           | <++>         |
+| P        | close_preview                          | <++>         |
+| rd       | replace_do/:Fardo                      | 替换全部     |
+| u        | replace_undo                           | <++>         |
+| U        | replace_undo_all                       | <++>         |
+| <++>     | <++>                                   | <++>         |
 
-#### Bullets.vim(TODO)
-<++>
+
+#### Bullets.vim
+| shortcut | motions  | mode |
+|----------|----------|------|
+| <C\-t>   | 子标题   | i    |
+| <C\-d>   | 父标题   | i    |
+| >>       | 子标题   | v    |
+| <<       | 父标题   | v    |
+| >        | 子标题   | n    |
+| <        | 父标题   | n    |
+| gN       | 重新编号 | n/v  |
+| LEADER+x | todo打钩 | <++> |
+| <++>     | <++>     | <++> |
+| <++>     | <++>     | <++> |
+
+#### fzf.gitignore
+创建gitignore
+| shortcut   | command           |
+|------------|-------------------|
+| <LEADER>gi | :FzfGitignore<CR> |
+
+
+#### tabular
+| shortcut | command       | mode |
+|----------|---------------|------|
+| ga       | :Tabularize / | v    |
+
+
+#### vim-after-object
+See [https://github.com/junegunn/vim-after-object](https://github.com/junegunn/vim-after-object) 
+
+
+#### suda.vim
+| command   | motions          | mode |
+|-----------|------------------|------|
+| SudaRead  | sudo权限打开文件 | c    |
+| SudaWrite | sudo权限保存     | c    |
+| sw        | sudo保存         | c    |
+| <++>      | <++>             | <++> |
+
+#### vim-markdown-toc
+生成目录
+| command          | motions         | notes                             |
+|------------------|-----------------|-----------------------------------|
+| :GenTocGFM       | GFM style       | 使用于githubREADM.md              |
+| :GenTocRedcarpet | Redcarpet style | <++>                              |
+| :GenTocGitLab    | <++>            | <++>                              |
+| :GenTocMarked    | <++>            | <++>                              |
+| :UpdateToc       | 更新目录        | g:vmt_auto_update_on_save=0时工作 |
+| :RemoveToc       | 移除目录        | <++>                              |
+
+#### rnvimr
+| command | motions          | notes |
+|---------|------------------|-------|
+| <C\-t>  | NvimEdit tabedit | <++>  |
+| <C\-x>  | NvimEdit split   | <++>  |
+| <C\-v>  | NvimEdit vspit   | <++>  |
+| <C\-o>  | NvimEdit drop    | <++>  |
+| gw      | 切换为nvim目录   | <++>  |
+| yw      | 切换为ranger目录 | <++>  |
+| <++>    | <++>             | <++>  |
+
+
+#### vim-rooter
+自动将新目录设置为工作目录
+```vim
+" 指定存在工作目录的文件或文件夹
+let g:rooter_patterns = ['__vim_project_root', '.git/']
+```
+
+#### AsyncRun
+后台运行 shell 命令，并将结果实时显示到 Vim 的 Quickfix 窗口中
+```vim
+" 与!类似
+" 命令会在后台运行，不会妨碍vim操作
+:AsyncRun[!] [options] {cmd} ...
+%:p     - 当前 buffer 的文件名全路径
+%:t     - 当前 buffer 的文件名（没有前面的路径）
+%:p:h   - 当前 buffer 的文件所在路径
+%:e     - 当前 buffer 的扩展名
+%:t:r   - 当前 buffer 的主文件名（没有前面路径和后面扩展名）
+%       - 相对于当前路径的文件名
+%:h:.   - 相对于当前路径的文件路径
+<cwd>   - 当前路径
+<cword> - 光标下的单词
+<cfile> - 光标下的文件名
+<root>  - 当前 buffer 的项目根目录
+```
+
+#### agit.vim
+查看git提交信息
+| shortcut  | command   | motions         |
+|-----------|-----------|-----------------|
+| LEADER+gl | :Agit<CR> | 查看git提交信息 |
+
+
+
+### Vim
 
 #### autocmd
 :autocmd [group] events pattern [nested] command
@@ -244,7 +389,23 @@ command! BD call function
 
 ```
 
+#### cnoreabbrev
+cnoreabbrev 改变command命令功能
+```vim
+" suda://%映射为sw
+cnoreabbrev sudowrite w suda://%
+cnoreabbrev sw w suda://%
+```
 
+<++>
+
+- [ ] snippets
+- [ ] vimtex
+- [ ] vim-easymotion
+- [ ] vim-spector
+- [ ] vim-subversive
+- [ ] lazygit.nvim
+- [ ] coc-nvim
 
 
 
