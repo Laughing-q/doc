@@ -29,6 +29,7 @@
 	+ [autocmd](#autocmd)
 	+ [function](#function)
 	+ [cnoreabbrev](#cnoreabbrev)
+	+ [map](#map)
 
 <!-- /TOC -->
 
@@ -128,13 +129,64 @@
 " pumvisible()表示是否有补全列表
 " 函数表示如果有补全列表则执行<C\->p, 否则执行<C\-h>
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" 如果有补全列表，则执行C-n, 否则如果光标前无字符则执行普通<TAB>, 
+" 如果有字符则coc#refresh()触发补全
+inoremap <silent><expr> <TAB>
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<TAB>" :
+	\ coc#refresh()
 ```
-| shortcut | command                        | motions            | mode |
-|----------|--------------------------------|--------------------|------|
-| LEADER+h | :call Show_documentation()<CR> | 查看光标所在处文档 | n    |
-| <++>     | <++>                           | <++>               | <++> |
-| <++>     | <++>                           | <++>               | <++> |
-| <++>     | <++>                           | <++>               | <++> |
+| shortcut   | command                            | motions                          | mode |
+|------------|------------------------------------|----------------------------------|------|
+| LEADER+h   | :call Show_documentation()<CR>     | 查看光标所在处文档               | n    |
+| <C-o>/TAB  | coc#refresh()                      | 触发补全                         | <++> |
+| LEADER+d   | :CocList diagnostics<CR>           | 查看代码诊断                     | <++> |
+| LEADER+'-' | <Plug>(coc-diagnostic-prev)        | 上一个诊断位置                   | <++> |
+| LEADER+'=' | <Plug>(coc-diagnostic-next)        | 下一个诊断位置                   | <++> |
+| <C\-c>     | :CocCommand<CR>                    | 查看coc命令                      | <++> |
+| space+y    | :<C-u>CocList -A --normal yank<cr> | 查看剪切板                       | n    |
+| gd         | <Plug>(coc-definition)             | 跳转到函数定义地方               | <++> |
+| gD         | :tab sp<CR><Plug>(coc-definition)  | 以新标签页跳转到函数定义地方     | <++> |
+| gr         | <Plug>(coc-references)             | 查看光标下变量在文件中的所有位置 | <++> |
+| LEADER+rn  | <Plug>(coc-rename)                 | 批量改名字                       | <++> |
+| gy         | <Plug>(coc-type-definition)        | <++>                             | <++> |
+| tt         | :CocCommand explorer               | 文件树                           | <++> |
+| ts         | <Plug>(coc-translator-p)           | 翻译光标所在单词                 | <++> |
+| LEADER+a   | <Plug>(coc-codeaction-selected)    | <++>                             | x    |
+| LEADER+aw  | <Plug>(coc-codeaction-selected)    | <++>                             | n    |
+| <++>       | <++>                               | <++>                             | <++> |
+| <++>       | <++>                               | <++>                             | <++> |
+
+```vim
+" 设置每天自动更新coc插件
+"coc.preferences.extensionUpdateCheck": "daily"
+```
+| command                         | motions             |
+|---------------------------------|---------------------|
+| :CocInstall coc-prettier@1.1.17 | 指定版本安装coc插件 |
+| :CocCommand                     | 查看coc命令         |
+| :CocUpdate                      | 更新插件            |
+| :CocList extensions             | 查看插件            |
+|                                 | <++>                |
+| <++>                            | <++>                |
+| <++>                            | <++>                |
+
+**:CocList extensions** 
+* `?` means invalid extension
+* `*` means extension is activated
+* `+` means extension is loaded
+* `-` means extension is disabled
+
+Supported actions (hit `<Tab>` to activate action menu):
+
+* `toggle` default action. activate/deactivate selected extension(s).
+* `enable`: enable selected extension(s).
+* `disable`: disable selected extension(s).
+* `reload`: reload selected extension(s).
+* `uninstall`: remove selected extension(s).
+* `lock`: toggle lock of extension, locked extension won't be updated by `:CocUpdate`
+
 
 #### FZF
 需要安装fzf和fzf.vim
@@ -387,6 +439,12 @@ endfunction
 " :BD调用
 command! BD call function
 
+" 判断光标前面是否为空"
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 ```
 
 #### cnoreabbrev
@@ -396,6 +454,27 @@ cnoreabbrev 改变command命令功能
 cnoreabbrev sudowrite w suda://%
 cnoreabbrev sw w suda://%
 ```
+
+#### map
+```vim
+" <silent> 表示屏蔽命令的输出
+" <expr> 在rhs的位置指定一个表达式，vim会eval这个表达式，并将表达式的值作为真正的rhs序列
+" 但<expr>也有些限制，有时候需要用到<c-r>=配合使用
+
+example:
+inoremap <silent><expr> <c-o> coc#refresh()
+
+function! coc#refresh() abort
+  return "\<c-r>=coc#start()\<CR>"
+endfunction
+
+" <buffer>    当前buffer有效
+" <nowait>   当你为","定义了buffer-local的映射, 而全局的映射中又有可能存在以","为前缀的映射，这时vim就会等待下一个字符的输出来判定使用哪个映射，而使用<nowait>则会避免这种情况，直接使用","的映射
+" <silent>    在执行时不显示执行的命令
+" <script>
+" <unique> 命令必须没有定义过，否则出错
+" <expr>     把右边的定义当作表达式运行
+` `
 
 <++>
 
