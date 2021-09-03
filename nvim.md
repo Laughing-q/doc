@@ -476,7 +476,7 @@ endfunction
 " <expr>     把右边的定义当作表达式运行
 ` `
 
-<++>
+```
 
 - [ ] snippets
 - [ ] vimtex
@@ -484,7 +484,7 @@ endfunction
 - [ ] vim-spector
 - [ ] vim-subversive
 - [ ] lazygit.nvim
-- [ ] coc-nvim
+- [X] coc-nvim
 
 
 
