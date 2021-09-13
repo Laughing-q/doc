@@ -1,37 +1,35 @@
 
-<!-- TOC GFM -->
 
 - [Vim shortcut](#vim-shortcut)
-	+ [shortcut](#shortcut)
-	+ [Command Mode](#command-mode)
+  + [shortcut](#shortcut)
+  + [Command Mode](#command-mode)
 - [Plugs](#plugs)
-	+ [Window management](#window-management)
-	+ [Tab management](#tab-management)
-	+ [Markdown](#markdown)
-	+ [Others](#others)
-	+ [GitGutter](#gitgutter)
-	+ [coc-nvim](#coc-nvim)
-	+ [FZF](#fzf)
-	+ [Leaderf](#leaderf)
-	+ [vim-visual-multi](#vim-visual-multi)
-	+ [Far.vim](#farvim)
-	+ [Bullets.vim](#bulletsvim)
-	+ [fzf.gitignore](#fzfgitignore)
-	+ [tabular](#tabular)
-	+ [vim-after-object](#vim-after-object)
-	+ [suda.vim](#sudavim)
-	+ [vim-markdown-toc](#vim-markdown-toc)
-	+ [rnvimr](#rnvimr)
-	+ [vim-rooter](#vim-rooter)
-	+ [AsyncRun](#asyncrun)
-	+ [agit.vim](#agitvim)
+  + [Window management](#window-management)
+  + [Tab management](#tab-management)
+  + [Markdown](#markdown)
+  + [Others](#others)
+  + [GitGutter](#gitgutter)
+  + [coc-nvim](#coc-nvim)
+  + [FZF](#fzf)
+  + [Leaderf](#leaderf)
+  + [vim-visual-multi](#vim-visual-multi)
+  + [Far.vim](#farvim)
+  + [Bullets.vim](#bulletsvim)
+  + [fzf.gitignore](#fzfgitignore)
+  + [tabular](#tabular)
+  + [vim-after-object](#vim-after-object)
+  + [suda.vim](#sudavim)
+  + [vim-markdown-toc](#vim-markdown-toc)
+  + [rnvimr](#rnvimr)
+  + [vim-rooter](#vim-rooter)
+  + [AsyncRun](#asyncrun)
+  + [agit.vim](#agitvim)
 - [Vim](#vim)
-	+ [autocmd](#autocmd)
-	+ [function](#function)
-	+ [cnoreabbrev](#cnoreabbrev)
-	+ [map](#map)
+  + [autocmd](#autocmd)
+  + [function](#function)
+  + [cnoreabbrev](#cnoreabbrev)
+  + [map](#map)
 
-<!-- /TOC -->
 
 ### Vim shortcut
 #### shortcut
@@ -485,6 +483,6 @@ endfunction
 - [ ] vim-subversive
 - [ ] lazygit.nvim
 - [X] coc-nvim
-
-
+- [X] nvim-treesitter
+- [ ] nvim-dap
 
