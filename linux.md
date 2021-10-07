@@ -257,3 +257,7 @@ alias
 
 ## 正则表达式
 <++>
+
+xresource可以设置X client应用的colorscheme和字体等
+xrdb命令可以加载xresource文件
+wal(pywal)中就是调用了xrdb命令
