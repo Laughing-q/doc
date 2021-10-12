@@ -251,4 +251,25 @@ alias
 <++>
 
 ## 编写shell脚本
+
+```shell
+# 获取以Core开头的第三列的输出
+sensors | awk '/^Core/ {print $3}'
+
+# 获取name的进程，且去掉包含grep的进程，返回进程号
+ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'
+
+# 列出所有进程，-o表示format, 再按照内存占用排序
+ps axch -o cmd,%mem --sort %mem
+# 从大到小排序
+ps axch -o cmd,%mem --sort -%mem
+# 设置显示间距
+ps axch -o cmd:15,%mem --sort -%mem
+```
+
 <++>
+
+
+## regular website
+[https://regexper.com/](https://regexper.com/) 
+[https://ihateregex.io/](https://ihateregex.io/) 
