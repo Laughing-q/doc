@@ -268,11 +268,109 @@ ps axch -o cmd:15,%mem --sort -%mem
 ```
 
 
-## regular website
-[https://regexper.com/](https://regexper.com/) 
-[https://ihateregex.io/](https://ihateregex.io/) 
-
 ## 正则表达式
-xresource可以设置X client应用的colorscheme和字体等
-xrdb命令可以加载xresource文件
-wal(pywal)中就是调用了xrdb命令
+### grep
+| options | options                                  |
+|---------|------------------------------------------|
+| -i      | 忽略大小写                               |
+| -v      | 选取不包含匹配项的文本行                 |
+| -c      | 打印匹配的数量                           |
+| -l      | 打印包含匹配项的文件名                   |
+| -L      | 打印不包含匹配项的文件名                 |
+| -n      | 在每个匹配项前打印其位于文件中的相应行号 |
+| -h      | 应用于多文件搜索,不输出文件名            |
+
+正则表达式元字符
+- `^` `$` `.` `[` `]` `{` `}` `-` `?` `*` `+` `(` `)` `|` `\`,
+其它所有字符都被认为是原义字符,虽然在个别情况下,反斜杠会被用来创建元序列, 也允许元字符被转义为原义字符,而不是被解释为元字符。
+- 任意字符`.`
+  ```shell
+  grep -h '.zip' dirlist*.txt
+  ```
+- 锚点`^`,`$`
+  ```shell
+  # 匹配以zip开头的项
+  $ grep -h '^zip' dirlist*.txt
+  zip
+  zipcloak
+  zipgrep
+  zipinfo
+  zipnote
+  zipsplit
+
+  # 匹配以zip结尾的项
+  $ grep -h 'zip$' dirlist*.txt
+  gunzip
+  gzip
+  funzip
+  gpg-zip
+  preunzip
+  prezip
+  unzip
+  zip
+
+  $ grep -h '^zip$' dirlist*.txt
+  zip
+
+  ```
+- 锚点`^`,`$`与任意字符`.`
+  ```shell
+    $ grep -i '^..j.r$' /usr/share/dict/words
+    Major
+    major
+  ```
+- 中括号表达式和字符类`[]`
+  ```shell
+    $ grep -h '[bg]zip' dirlist*.txt
+    bzip2
+    bzip2recover
+    gzip
+  ```
+  一个字符集合可能包含任意多个字符,并且元字符被放置到中括号里面后会失去了它们的特殊含义
+  * 插入字符`^`表示否定
+    ```shell
+    # 得到除了“b”和“g”之外的任意字符
+    # 且必须保证前面有字符，所以zip也没有匹配
+    $ grep -h '[^bg]zip' dirlist*.txt
+    bunzip2
+    gunzip
+    funzip
+    gpg-zip
+    preunzip
+    prezip
+    prezip-bin
+    unzip
+    unzipsfx
+    ```
+    如果在正则表示式中的第一个字符是一个插入字符,则剩余的字符被看作是不会在给定的字符位置出现的字符集合。
+  * 传统字符`[A-Z]`,`[a-z]`,`[0-9]`
+    ```shell
+    # 找到所有以大写字母开头的
+    $ grep -h '^[A-Z]' dirlist*.txt
+    MAKEDEV
+    ControlPanel
+    GET
+    HEAD
+    POST
+    
+    # 匹配所有字母与数字开头的
+    $ grep -h '^[A-Za-z0-9]' dirlist*.txt
+    ```
+    以上连字符`-`被特俗对待，如果需要匹配连字符`-`，则将其放在第一个
+    ```shell
+    # 匹配连字符`-`和大写字母A,Z
+    $ grep -h '[-AZ]' dirlist*.txt
+    ```
+- POSIX字符集
+
+
+
+
+- xresource可以设置X client应用的colorscheme和字体等
+- xrdb命令可以加载xresource文件
+- wal(pywal)中就是调用了xrdb命令
+
+## regular website
+- [https://regexper.com/](https://regexper.com/) 
+- [https://ihateregex.io/](https://ihateregex.io/) 
+
