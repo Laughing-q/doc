@@ -267,9 +267,12 @@ ps axch -o cmd,%mem --sort -%mem
 ps axch -o cmd:15,%mem --sort -%mem
 ```
 
-<++>
-
 
 ## regular website
 [https://regexper.com/](https://regexper.com/) 
 [https://ihateregex.io/](https://ihateregex.io/) 
+
+## 正则表达式
+xresource可以设置X client应用的colorscheme和字体等
+xrdb命令可以加载xresource文件
+wal(pywal)中就是调用了xrdb命令
