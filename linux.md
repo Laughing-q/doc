@@ -903,6 +903,111 @@ ps axch -o cmd,%mem --sort -%mem
 # 设置显示间距
 ps axch -o cmd:15,%mem --sort -%mem
 ```
+### awk
+```shell
+awk 'pattern { action }' file
+```
+
+```shell
+awk -f progfile file
+```
+| 符号 | 含义                 |
+|------|----------------------|
+| NF   | 当前行的字段数量     |
+| NR   | 当前为止读取到的行数 |
+| $0   | 当前行的所有内容     |
+| $n   | 当前行的某个字段     |
+| <++> | <++>                 |
+
+```shell
+awk '{ print NR, NF, $1, $2 * $3 }' awk_example.txt 
+```
+#### print与printf
+- 在print语句中由`,`分隔的表达式, 在输出时默认用一个空格符分隔. 
+- print打印的每一行都由一个换行符终止
+- 在print语句中, 被`"`包围的文本会和字段, 以及运算结果一起输出.
+- `'`包围awk语言编写的程序, 命令行中的程序被单引号包围. 这个规定可以防止程序中的字符 (例如 $) 被 shell 解释, 也可以让程序的长度多于一行.
+- **可以在同一行放置多个语句, 语句之间用`;`分开.**
+- **一个动作就是一个语句序列, 语句之间用`;`或换行符分开.**
+- printf(format , value, value, ..., value)
+  ```shell
+  awk '{ printf("total pay for %s is $%.2f\n", $1, $2 * $3) }' file
+  ```
+  ```shell
+  # 第一个格式说明符 %-8s, 将名字左对齐输出, 占用 8 个字符的宽度. 第二个格式说明符 %6.2f, 以带有两位小数的格式打印，占用至少6个字符
+  awk '{ printf("%-8s $%6.2f\n", $1, $2 * $3) }' file
+  awk '$2 * $3 > 50 { printf("$%.2f for %s\n", $2 * $3, $1) }' file
+  ```
+#### 选择
+- 模式组合
+  * 逻辑运算符`&&`,`||`,`!`
+  ```shell
+  awk '$2 >= 4 || $3 >= 20' file
+  awk '$2 * $3 >= 4 || $4 == "ARCH"' file
+  ```
+- `BEGIN`与`END`
+  * BEGIN 在第一个输入文件的第一行之前被匹配, END 在最后一个输入文件的最后一行被处理
+  ```shell
+  # BEGIN模式仅匹配第一个{}中的动作，所以第二个{print}会打印每一行
+  awk 'BEGIN { print "NAME RATE HOURS";print ""} { print }' awk_example.txt 
+  ```
+#### 计算
+- 计数
+  * 当awk的变量作为数值使用时, 默认初始值为0, 所以这里没必要初始化emp.
+  ```shell
+  awk '$3 > 15 { emp=emp+1 } END {print emp, "employees worked more than 15 hours"}' awk_example.txt 
+  ```
+- 计算总和与平均数
+  ```shell
+  awk '{ pay = pay + $2 * $3 }
+      END { print NR, "lines"
+      print "total pay is", pay
+      print "average pay is", pay / NR
+      }' file
+  ```
+- 搜索某个字段数值最大的行
+  ```shell
+  $2 > maxrate { maxrate = $2; maxemp = $1 }
+  END { print "highest number:", maxrate, "for", maxemp }
+  ```
+- 字符串拼接
+  ```shell
+    { name = names $1 " "}
+  END { print names}
+  ```
+- 打印最后一行
+  * 虽然在`END`动作里,`NR`的值被保留了下来, 但是`$0` 却不会.
+  ```shell
+    { last = $0 }
+  END { print last }
+  ```
+- 内建函数
+  * `length()`计算字符串中的字符个数
+  ```shell
+  { print $1, length($1) }
+  ```
+- 行,单词与字符的计数
+  ```shell
+  # 为每一个输入行末尾的换行符加1, 这是因为$0不包含换行符.
+  { nc = nc + length($0) + 1;
+    nw = nw + NF
+  }
+  END { print NR, "lines, ", nw, "words, ", nc, "characters"}
+  ```
+
+#### 流程控制语句
+- If-Else语句
+  ```shell
+  $2 > 6 { n = n + 1; pay = pay + $2 * $3 }
+  END { if (n > 0)
+          print n, "employees, total pay is", pay,
+          "average pay is", pay/n
+      else
+          print "no employees are paid more than $6/hour"
+      }
+  ```
+
+
 
 
 ---
