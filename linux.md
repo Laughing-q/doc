@@ -1006,7 +1006,38 @@ awk '{ print NR, NF, $1, $2 * $3 }' awk_example.txt
           print "no employees are paid more than $6/hour"
       }
   ```
+- while
+  ```shell
+    { i = 1
+      while (i <= $3) {
+        printf("\t%.2f\n", $1 * (1 + $2) ^ i)
+        i = i + 1
+      }
+    }
+  ```
+- for
+  ```shell
+    { for (i = 1; i <= $3; i = i + 1)
+        printf("\t%.2f\n", $1 * (1 + $2) ^ i)
+    }
+  ```
 
+#### 数组
+```shell
+{ line[NR] = $0 }
+END { i = NR
+      while (i > 0){
+        print line[i]
+        i = i - 1
+        }
+    }
+```
+```shell
+{ line[NR] = $0 }
+END { for (i = NR; i > 0; i = i - 1)
+        print line[i]
+    }
+```
 
 
 
