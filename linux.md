@@ -903,7 +903,25 @@ ps axch -o cmd,%mem --sort -%mem
 # 设置显示间距
 ps axch -o cmd:15,%mem --sort -%mem
 ```
-### awk
+
+### 读取键盘输入
+#### read
+```shell
+read [-options] [variable...]
+```
+ variable 是用来存储输入数值的一个或多个变量名。 如果没有提供变量名，shell 变量 `REPLY` 会包含数据行。
+```shell
+echo -n "Please enter an integer -> "
+read int
+# 多个变量
+read var1 var2 var3 var4 var5
+```
+- 如果 read 命令接受到变量值数目少于期望的数字，那么额外的变量值为空，
+- 多余的输入数据则会 被包含到最后一个变量中
+- 如果 read 命令之后没有列出变量名，则一个 shell 变量，REPLY，将会包含 所有的输入
+
+
+## awk
 ```shell
 awk 'pattern { action }' file
 ```
@@ -922,6 +940,8 @@ awk -f progfile file
 ```shell
 awk '{ print NR, NF, $1, $2 * $3 }' awk_example.txt 
 ```
+### 基础部分
+
 #### print与printf
 - 在print语句中由`,`分隔的表达式, 在输出时默认用一个空格符分隔. 
 - print打印的每一行都由一个换行符终止
@@ -1038,6 +1058,14 @@ END { for (i = NR; i > 0; i = i - 1)
         print line[i]
     }
 ```
+### 模式
+#### BEGIN与END
+- BEGIN 与 END 不能与其他模式作组合
+- BEGIN 与 END是唯一两个不能省略动作的模式.
+
+#### 表达式
+<++>
+
 
 
 
@@ -1045,3 +1073,5 @@ END { for (i = NR; i > 0; i = i - 1)
 - xresource可以设置X client应用的colorscheme和字体等
 - xrdb命令可以加载xresource文件
 - wal(pywal)中就是调用了xrdb命令
+
+**`continue`如果在括号内，只会跳出当前括号，而不会跳出循环**
