@@ -920,6 +920,126 @@ read var1 var2 var3 var4 var5
 - 多余的输入数据则会 被包含到最后一个变量中
 - 如果 read 命令之后没有列出变量名，则一个 shell 变量，REPLY，将会包含 所有的输入
 
+### 字符串与数字
+#### 字符串
+- 基本参数
+  ```shell
+  # {}将变量隔开，防止读取到相邻文本
+  ${a}
+  # 将数字包裹在花括号中，可以访问大于9的位置参数
+  ${11}
+  ```
+- 管控空变量的展开
+  
+  | 格式               | 结果                                                                                                                          |
+  |--------------------|-------------------------------------------------------------------------------------------------------------------------------|
+  | ${parameter:-word} | 若parameter没有设置(不存在)或者为空，展开结果是word的值                                                                       |
+  | ${parameter:=word} | 若parameter没有设置(不存在)或者为空，将word的值赋给parameter                                                                  |
+  | ${parameter:?word} | 若parameter没有设置(不存在)或者为空，这种展开将导致脚本带有错误退出，并word的内容会发送的标准错误                             |
+  | ${parameter:+word} | 若parameter没有设置或为空，展开结果为空。若parameter 不为空，展开结果是word的值会替换掉parameter的值，然而parameter的值不会变 |
+
+  注意： 位置参数或其它的特殊参数不能以这种方式赋值。
+
+- 返回变量名的参数展开
+  | 格式        | 结果                     |
+  |-------------|--------------------------|
+  | ${!prefix*} | 展开以prefix开头的变量名 |
+  | ${!prefix@} | 展开以prefix开头的变量名 |
+
+- 字符串的展开
+  
+  | 格式          | 结果                              |
+  |---------------|-----------------------------------|
+  | ${#parameter} | 展开由parameter所包含的字符串长度 |
+  | ${#*}         | 展开位置参数的个数                |
+  | ${#@}         | 展开位置参数的个数                |
+
+
+  * 展开parameter所包含字符串一部分
+
+  | 格式                       | 结果                                 |
+  |----------------------------|--------------------------------------|
+  | ${parameter:offset}        | 从第offset个字符开始到最后           |
+  | ${parameter:offset:length} | 从第offset个字符开始到length位置截止 |
+
+  * 如果`offset`为负数，则从末尾开始数,但顺序还是向后数，不是向前
+  * 负数前面比如有空格，以免与${parameter:-word}混淆
+  * 如果length出现，则必须为正数
+  
+
+  | 格式                  | 结果                   |
+  |-----------------------|------------------------|
+  | ${parameter#pattern}  | 清除开头最短的匹配结果 |
+  | ${parameter##pattern} | 清除开头最长的匹配结果 |
+  | ${parameter%pattern}  | 清除末尾最短的匹配结果 |
+  | ${parameter%%pattern} | 清除末尾最长的匹配结果 |
+
+  example:
+  ```shell
+  $ foo=file.txt.zip
+  $ echo ${foo#*.}
+  txt.zip
+  $ echo ${foo##*.}
+  zip
+
+  $ foo=file.txt.zip
+  $ echo ${foo%.*}
+  file.txt
+  $ echo ${foo%%.*}
+  file
+  ```
+
+  | 格式                         | 结果                       |
+  |------------------------------|----------------------------|
+  | ${parameter/pattern/string}  | 只会替换第一项             |
+  | ${parameter//pattern/string} | 替换所有匹配项目           |
+  | ${parameter/#pattern/string} | 要求匹配项出现在字符串开头 |
+  | ${parameter/%pattern/string} | 要求匹配项出现在字符串结尾 |
+
+
+  * **字符串操作展开可以用来替换其它常见命令比方说 sed 和 cut。 通过减少使用外部程序来提高效率**
+- 大小写转换
+  * declare命令可以将字符串规范为大小写
+  ```shell
+  declare -u upper
+  declare -l lower
+  foo=aBc
+  upper="$foo"
+  lower="$foo"
+  echo "$upper"
+  echo "$lower"
+  ```
+  output:
+  ```shell
+  ABC
+  abc
+  ```
+  * 有四个参数展开可以执行大小写
+
+  | 格式           | 结果                                      |
+  |----------------|-------------------------------------------|
+  | ${parameter,,} | 把parameter的值全部展开成小写字母         |
+  | ${parameter,}  | 仅仅把parameter的第一个字符展开成小写字母 |
+  | ${parameter^^} | 把parameter的值全部展开成大写字母         |
+  | ${parameter^}  | 仅仅把parameter的第一个字符展开成大写字母 |
+
+  example:
+  ```shell
+    foo=aBc
+    echo ${foo,,}
+    echo ${foo,}
+    echo ${foo^^}
+    echo ${foo^}
+  ```
+  output:
+  ```shell
+  abc
+  aBc
+  ABC
+  ABc
+  ```
+
+
 
 ## awk
 ```shell
