@@ -47,6 +47,31 @@
     + [example](#example)
   - [xargs](#xargs)
 * [编写shell脚本](#编写shell脚本)
+  - [读取键盘输入](#读取键盘输入)
+    + [read](#read)
+  - [字符串与数字](#字符串与数字)
+    + [字符串](#字符串)
+    + [算术求值和展开](#算术求值和展开)
+  - [数组](#数组)
+  - [declare](#declare)
+  - [流程控制](#流程控制)
+    + [if](#if)
+    + [case](#case)
+  - [循环](#循环)
+    + [for](#for)
+    + [while/until](#whileuntil)
+  - [others](#others)
+    + [组命令与子shell](#组命令与子shell)
+* [awk](#awk)
+  - [基础部分](#基础部分)
+    + [print与printf](#print与printf)
+    + [选择](#选择)
+    + [计算](#计算)
+    + [流程控制语句](#流程控制语句)
+    + [数组](#数组-1)
+  - [模式](#模式)
+    + [BEGIN与END](#begin与end)
+    + [表达式](#表达式)
 
 ## 权限
 chmod
@@ -1039,7 +1064,224 @@ read var1 var2 var3 var4 var5
   ABc
   ```
 
+#### 算术求值和展开
+<++>
 
+### 数组
+bash的数组仅限制为单一维度
+- 创建数组
+  ```shell
+  $ a[1]=foo
+  $ echo ${a[1]}
+  foo
+  ```
+  使用`declare -a`命令创建数组
+  ```shell
+  $ declare -a a
+  ```
+- 数组赋值
+  ```shell
+  name[sub]=value
+  name=(value1 value2 value3 ...)
+  ```
+  example:
+  ```shell
+  $ days=(Sun Mon Tue Wed Thu Fri Sat)
+  $ days=([0]=Sun [1]=Mon [2]=Tue [3]=Wed [4]=Thu [5]=Fri [6]=Sat)
+  ```
+- 访问数组元素
+  * example:
+  ```shell
+  #!/bin/bash
+  # hours : script to count files by modification time
+  usage() {
+    echo "usage: $(basename $0) directory" >&2
+  }
+  # Check that argument is a directory
+  if [[ ! -d $1 ]]; then
+    usage
+    exit 1
+  fi
+  # Initialize array
+  for i in {0..23}; do hours[i]=0; done
+  # Collect data
+  for i in $(stat -c %y "$1"/* | cut -c 12-13); do
+    j=${i/#0/}
+    ((++hours[j]))
+    ((++count))
+  done
+  # Display data
+  echo -e "Hour\tFiles\tHour\tFiles"
+  echo -e "----\t-----\t----\t-----"
+  for i in {0..11}; do
+    j=$((i + 12))
+    printf "%02d\t%d\t%02d\t%d\n" $i ${hours[i]} $j ${hours[j]}
+  done
+  printf "\nTotal files = %d\n" $count
+  ```
+
+- 数组操作
+  * 下标 `${array[*]}` 和 `${arrar[@]}` 可以被用来访问数组中的每一个元素。与位置参数一样，**@ 表示法在两者之中更有用处**。
+  * example
+  ```shell
+  [me@linuxbox ~]$ animals=("a dog" "a cat" "a fish")
+  [me@linuxbox ~]$ for i in ${animals[*]}; do echo $i; done
+  a
+  dog
+  a
+  cat
+  a
+  fish
+  [me@linuxbox ~]$ for i in ${animals[@]}; do echo $i; done
+  a
+  dog
+  a
+  cat
+  a
+  fish
+  [me@linuxbox ~]$ for i in "${animals[*]}"; do echo $i; done
+  a dog a cat a fish
+  [me@linuxbox ~]$ for i in "${animals[@]}"; do echo $i; done
+  a dog
+  a cat
+  a fish
+  ```
+  * 数组元素个数`${array[@]}`,`${array[index]}`
+  ```shell
+  [me@linuxbox ~]$ a[100]=foo
+  [me@linuxbox ~]$ echo ${#a[@]} # number of array elements
+  1
+  [me@linuxbox ~]$ echo ${#a[100]} # length of element 100
+  3
+  ```
+  * 找到数组使用的下标`${!array[*]}`,`${!array[@]}`
+  ```shell
+  [me@linuxbox ~]$ foo=([2]=a [4]=b [6]=c)
+  [me@linuxbox ~]$ for i in "${foo[@]}"; do echo $i; done
+  a
+  b
+  c
+  [me@linuxbox ~]$ for i in "${!foo[@]}"; do echo $i; done
+  2
+  4
+  6
+  ```
+  * 在末尾添加元素`array+=(a b c)`
+  ```shell
+  [me@linuxbox~]$ foo=(a b c)
+  [me@linuxbox~]$ echo ${foo[@]}
+  a b c
+  [me@linuxbox~]$ foo+=(d e f)
+  [me@linuxbox~]$ echo ${foo[@]}
+  a b c d e f
+  ```
+- 数组排序
+  * 与sort配合使用
+- 删除数组`unset`
+  * `unset foo`，删除foo全部元素
+  * `unset 'foo[2]'`，删除foo第3个元素
+  * 使用引号是防止shell执行路径名展开操作
+  * 任何一个不带下表的数组变量，则指的是数组元素0
+  ```shell
+  [me@linuxbox~]$ foo=(a b c d e f)
+  [me@linuxbox~]$ echo ${foo[@]}
+  a b c d e f
+  [me@linuxbox~]$ foo=A
+  [me@linuxbox~]$ echo ${foo[@]}
+  A b c d e f
+  ```
+- 关联数组
+  * 有点类似于字典
+  ```shell
+  declare -A colors
+  colors["red"]="#ff0000"
+  colors["green"]="#00ff00"
+  colors["blue"]="#0000ff"
+  echo ${colors["blue"]}
+  ```
+  * 不同于整数索引的数组，仅仅引用它们就能创建数组，**关联数组必须用带有 -A 选项的 declare 命令创建**。
+
+### declare
+declare为shell指令
+- 在第一种语法中可用来声明变量并设置变量的属性([rix]即为变量的属性），
+- 在第二种语法中可用来显示shell函数。
+- 若不加上任何参数，则会显示全部的shell变量与函数(与执行set指令的效果相同)。
+- 语法
+  ```shell
+  declare [+/-][rxi][变量名称＝设置值] 或 declare -f
+  ```
+  * +/- 　"-"可用来指定变量的属性，"+"则是取消变量所设的属性。
+  * -f 　仅显示函数。
+  * r 　将变量设置为只读。
+  * x 　指定的变量会成为环境变量，可供shell以外的程序来使用。
+  * i 　[设置值]可以是数值，字符串或运算式。
+  * example
+    * 改变变量属性`declare -i`,`declare +i`
+    ```shell
+    $ declare -i ef //声明整数型变量
+    $ ef=1  //变量赋值（整数值）
+    $ echo $ef //显示变量内容
+    1
+    $ ef="wer" //变量赋值（文本值）
+    $ echo $ef 
+    0
+    $ declare +i ef //取消变量属性
+    $ ef="wer"
+    $ echo $ef
+    wer
+    ```
+    * 设置变量只读`declare -r`
+    ```shell
+    $ declare -r ab //设置变量为只读
+    $ ab=88 //改变变量内容
+    -bash: ab: 只读变量
+    $ echo $ab //显示变量内容
+    56
+    ```
+    * 声明数组`declare -a`
+    ```shell
+    $ declare -a cd='([0]="a" [1]="b" [2]="c")' //声明数组变量
+    $ echo ${cd[1]}
+    b //显示变量内容
+
+    $ echo ${cd[@]} //显示整个数组变量内容
+    a b c
+    ```
+### 流程控制
+#### if
+#### case
+
+### 循环
+#### for
+#### while/until
+
+
+### others
+#### 组命令与子shell
+```shell
+# 组命令
+{ command1; command2; [command3; ...] }
+
+# 子shell
+(command1; command2; [command3;...])
+```
+
+```shell
+ls -l > output.txt
+echo "Listing of foo.txt" >> output.txt
+cat foo.txt >> output.txt
+
+# 组命令
+{ ls -l; echo "Listing of foo.txt"; cat foo.txt; } > output.txt
+
+# 子shell
+(ls -l; echo "Listing of foo.txt"; cat foo.txt) > output.txt
+```
+虽然组命令和子 shell 看起来相似，并且它们都能用来在重定向中合并流，但是两者之间有一个很重要的不同。
+然而，一个组命令在当前 shell 中执行它的所有命令，而一个子 shell（顾名思义）在当前 shell 的一个 子副本中
+执行它的命令。这意味着运行环境被复制给了一个新的 shell 实例。当这个子 shell 退出时，环境副本会消失，
+所以在子 shell 环境（包括变量赋值）中的任何更改也会消失。因此，在大多数情况下，除非脚本要求一个子
+shell， 组命令比子 shell 更受欢迎。组命令运行很快并且占用的内存也少。
 
 ## awk
 ```shell
