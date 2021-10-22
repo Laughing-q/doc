@@ -72,6 +72,7 @@
   - [模式](#模式)
     + [BEGIN与END](#begin与end)
     + [表达式](#表达式)
+* [sed](#sed-1)
 
 ## 权限
 chmod
@@ -603,10 +604,15 @@ $ paste distros-dates.txt distros-versions.txt
 06/19/2008 SUSE 11.0
 ```
 ### join
+TODO
 ### comm
+TODO
 ### diff
+TODO
 ### patch
+TODO
 ### tr
+TODO
 
 ### sed
 | 地址        | 说明                                                             |
@@ -911,7 +917,6 @@ $ find ~ -type f -name 'foo*' -exec ls -l '{}' +
 当命令行超过系统支持的最大长度时,xargs 会执行带有最大参数个数的指定命令,然后重复这个过程直到耗尽标准输入。
 执行带有 –show–limits 选项 的 xargs 命令,来查看命令行的最大值
 
-
 ## 编写shell脚本
 
 ```shell
@@ -931,6 +936,7 @@ ps axch -o cmd:15,%mem --sort -%mem
 
 ### 读取键盘输入
 #### read
+TODO
 ```shell
 read [-options] [variable...]
 ```
@@ -1065,7 +1071,7 @@ read var1 var2 var3 var4 var5
   ```
 
 #### 算术求值和展开
-<++>
+TODO
 
 ### 数组
 bash的数组仅限制为单一维度
@@ -1249,12 +1255,205 @@ declare为shell指令
     ```
 ### 流程控制
 #### if
+- 语法
+  ```shell
+  if commands; then
+      commands
+  [elif commands; then
+      commands...]
+  [else
+      commands]
+  fi
+  ```
+- 退出状态
+  * 当命令执行完毕后，命令(包括编写的脚本和shell函数)会给系统发送一个`退出状态`。属于0~255。
+  * 通常来说`0`值说明运行成功, 其他所有值说明失败。
+  * echo `$?`可以检查退出状态
+  * shell内部命令`true`,`false`
+
+- `test`
+  * 两种等价模式如下:
+  * `test expression`
+  * `[ expression ], 这个形式用得比较多`
+  * expression是一个表达式，表达式为真时返回0退出状态，表达式为假时，test退出状态为1
+- 文件表达式
+  | 表达式          | 如果为真                                                                                    |
+  |-----------------|---------------------------------------------------------------------------------------------|
+  | file1 -ef file2 | file1和file2拥有相同的索引号(通过硬链接两个文件名只想相同文件)                              |
+  | file1 -nt file2 | file1新于file2                                                                              |
+  | file1 -ot file2 | file1早于file2                                                                              |
+  | -b file         | file存在并且是一个块文件                                                                    |
+  | -c file         | file存在并且是一个字符文件                                                                  |
+  | -d file         | file存在并且是一个目录                                                                      |
+  | -e file         | file存在                                                                                    |
+  | -f file         | file存在且是一个普通文件                                                                    |
+  | -g file         | file存在且设置了组ID                                                                        |
+  | -G file         | file存在且由有效组ID拥有                                                                    |
+  | -k file         | file存在且设置了他的"sticky bit"                                                            |
+  | -L file         | file存在且是一个符号链接                                                                    |
+  | -O file         | file存在且由有效用户ID拥有                                                                  |
+  | -p file         | file存在且是一个命令管道                                                                    |
+  | -r file         | file存在且可读                                                                              |
+  | -s file         | file存在且长度大于0                                                                         |
+  | -S file         | file存在且是一个网路socket                                                                  |
+  | -t fd           | fd是一个定向到终端\/从终端定向的文件描述符。这可以用来决定是否重新定向了标准输入\/输出错误 |
+  | -u file         | file存在且设置了setuid位                                                                    |
+  | -w file         | file存在且可写                                                                              |
+  | -x file         | file存在并且可执行                                                                          |
+- `return`可以代替`exit`在函数中作为返回退出状态
+- 字符串表达式
+  | 表达式                              | 如果为真                               |
+  |-------------------------------------|----------------------------------------|
+  | string                              | string不为null                         |
+  | -n string                           | 字符串string长度大于0                  |
+  | -z string                           | string长度为0                          |
+  | string1 = string2 \/ string2== string2 | string1和string2相同，单\/双等号都可以 |
+  | string != string2                   | string1和string2不相同                 |
+  | string1 > string2                   | string1排列在string2之后               |
+  | string1 < string2                   | string1排列在string2之前                                   |
+  注意：`>`与`<`在使用的时候必须用引号引起来或者反斜杠转义，否则当与test一起使用的时候，会被解释为重定向操作符
+
+- 整数表达式
+  | 表达式                | 如果为真             |
+  |-----------------------|----------------------|
+  | integer1 -eq integer2 | integer1 == integer2 |
+  | integer1 -ne integer2 | integer1 != integer2 |
+  | integer1 -le integer2 | integer1 <= integer2 |
+  | integer1 -lt integer2 | integer1 < integer2  |
+  | integer1 -ge integer2 | integer1 >= integer2 |
+  | integer1 -gt integer2 | integer1 > integer2 |
+
+- 更现代的测试`[[ expression ]]`
+  * 这个`[[ expression ]]`类似`test`命令,但是有一些新特性
+  * 增加了新的字符串表达式`string =~ regex`, 如果匹配正则表达式regex，返回true。
+    ```shell
+    # 判断INT是否为整数
+    INT=-5
+    if [[ "$INT" =~ ^-?[0-9]+$ ]]; then
+      commands
+    done
+    ```
+  * 支持`==`操作符支持类型匹配
+    ```shell
+    FILE=foo.bar
+    if [[ $FILE == foo.* ]]; then
+      command
+    done
+    ```
+- `(())` - 操作整数
+  ```shell
+  INT=-5
+  if ((INT == 0)); then
+    command
+  done
+  ---------------------------------------------
+  if ((INT % 0) == 0); then
+    command
+  done
+  ```
+- 组合表达式
+  | 操作符 | test | `[[]]`and`(())` |
+  |--------|------|-----------------|
+  | AND    | -a   | &&              |
+  | OR     | -o   | \|\|            |
+  | NOT    | !    | !               |
+
+- `test`使用的所有表达式和操作符都被shell看作是命令参数(不像`[[  ]]`和`((  ))`), 
+  对于bash有特殊含义的字符，比如说`(`,`)`必须引起来或者是转义
+  ```shell
+  if [ ! \( $INT -ge $MIN_VAL -a $INT -le $MAX_VAL \) ]; then     
+      command
+  done
+  ```
+- test更传统(是POSIX的一部分), 而`[[  ]]`特定于bash
+- 另一种控制流程的方法
+  * `command && command`
+  * `command || command`
+
 #### case
+TODO
 
 ### 循环
 #### for
-#### while/until
+- 语法
+```shell
+for variable [in words]; do
+  commands
+done
+```
+Tips: 如果[in words]省略，则是循环读取`位置参数`。
+```shell
+for i in A B C D; do
+  echo $i
+done
+-----------------------
+for i in {A..D}; do
+  echo $i
+done
+-----------------------
+for i in distros*.txt; do
+  echo $i
+done
+```
+- C语言格式
+```shell
+for (( expression1; expression2; expression3 )); do
+  commands
+done
+-----------------------
+(( expression1 ))
+while (( expression2 )); do
+  command
+  (( expression3 ))
+done
+```
+example:
+```shell
+#!/bin/sh
+for (( i=0; i<5; i=i+1 )); do
+  echo $1
+done
+```
 
+#### while/until
+- while
+  * 语法
+  ```shell
+  while command; do command; done
+  ```
+  example:
+  ```shell
+  #!/bin/sh
+  count=1
+  while [ $count -le 5 ]; do
+    echo $count
+    count=$((count+1))
+  done
+  ```
+
+  与`if`一样，while计算一系列命令的退出状态，只要退出状态为0，就继续执行循环命令
+  - 跳出循环
+    * `break`
+    * `continue`
+- until
+  ```shell
+  #!/bin/sh
+  count=1
+  until [ $count -gt 5 ]; do
+    echo $count
+    count=$((count + 1))
+  done
+  ```
+- 循环读取文件
+  ```shell
+  #!/bin/sh
+  while read distro version release; do
+    printf "Distro: %s\tVersion: %s\tReleased: %s\n" \
+      $distro \
+      $version \
+      $release
+  done < distros.txt
+  ```
 
 ### others
 #### 组命令与子shell
@@ -1426,9 +1625,10 @@ END { for (i = NR; i > 0; i = i - 1)
 - BEGIN 与 END是唯一两个不能省略动作的模式.
 
 #### 表达式
-<++>
+TODO
 
-
+## sed
+TODO
 
 
 ---
@@ -1439,4 +1639,3 @@ END { for (i = NR; i > 0; i = i - 1)
 **`continue`如果在括号内，只会跳出当前括号，而不会跳出循环**
 
 - `dash`比`bash`快，`dash`不支持`()`, `[[]]`
-- `==`是`[[]]`新加的
