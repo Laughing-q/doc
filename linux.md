@@ -586,9 +586,17 @@ $ cut -f 3 distros.txt | cut -c 7-10
 2008
 2008
 2008
+
+# -f后跟多个字段号可获得更多的字段, 但不能调整顺序(下面给的3,2，但实际还是会按照2,3输出)
+# 如果需要调整输出字段顺序，还是用awk
+$ cut -f3,2 distros.txt
 ```
+注意：能用`cut`就不用`awk`，`awk`虽然功能更多，但对于一些简单的分割提取效率不如`cut`
+
 ### paste
-paste 命令的功能正好与 cut 相反。它会添加一个或多个文本列到文件中,而不是从文件中抽取文本列。通过读取多个文件,然后把每个文件中的字段整合成单个文本流,输入到标准输出
+paste 命令的功能正好与 cut 相反。它会添加一个或多个文本列到文件中,而不是从文件中抽取文本列。
+通过读取多个文件,然后把每个文件中的字段整合成单个文本流,输入到标准输出
+- paste 指令会把每个文件以列对列的方式，一列列地加以合并。
 ```shell
 $ head distros-versions.txt
 Fedora 10
@@ -603,16 +611,71 @@ $ paste distros-dates.txt distros-versions.txt
 10/30/2008 Ubuntu 8.10
 06/19/2008 SUSE 11.0
 ```
+```shell
+# 将file中拼接成一行
+$ paste -sd ' ' file
+```
+
 ### join
-TODO
+类似`paste`，但是根据数据关联来拼接
+```shell
+$ head names.txt
+11/25/2008 Fedora
+10/30/2008 Ubuntu
+
+$ head vernums.txt
+11/25/2008 10
+10/30/2008 8.10
+
+$ join names.txt vernums.txt | head
+11/25/2008 Fedora 10
+10/30/2008 Ubuntu 8.10
+
+```
+
 ### comm
-TODO
+`comm`会比较两个文件，会显示每个文件特有的文本行和共有的文本行
+- comm会产生3列输出，第一列包含第一个文件独有的文本行，第二列是第二个文件独有的，第三行为共有的
+- comm支持`-n`形式的选项，指定要隐藏的列
+  ```shel
+  # 隐藏第1，2列
+  $ comm -12 file1.txt file2.txt
+  ```
+
 ### diff
 TODO
 ### patch
 TODO
 ### tr
-TODO
+`tr`用来更改字符,可以看作是一种基于字符的查找和替换;
+- `tr`接受两个参数，被转换的字符集和转换后的字符集, 字符集可以以三种方式表示
+  * 一个枚举列表，ABCDEFGHIJKLMNOPQRSTUVWXYZ
+  * 一个字符域，A-Z
+  * POSIX字符类，[:upper:]
+- 小写字母 -> 大写字母
+  ```shell
+  $ echo "lowercase leters" | tr a-z A-Z
+  LOWERCASE LETTERS
+  ```
+- 大多数情况，两个字符集应该长度相同, 也有可能第一个集合大于第二个
+  ```shell
+  $ echo "lowercase letters" | tr [:lower:] A
+  AAAAAAAAA AAAAAAA
+  ```
+- `tr`也可以从输入流中删除字符
+  ```shell
+  tr -d '\r' < dos_file > unix_file
+  ```
+- 挤压(删除)重读的字符实例，只能挤压相邻的字符(类似uniq)
+  ```shell
+  $ echo "aaabbbccc" | tr -s ab
+  abccc
+  ```
+  ```shell
+  $ echo "abcabcabc" | tr -s ab
+  abcabcabc
+  ```
+
 
 ### sed
 | 地址        | 说明                                                             |
