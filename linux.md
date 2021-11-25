@@ -547,7 +547,7 @@ Fedora 7 05/31/2007
 **sort允许在key选项中定义偏移**
 ```shell
 # 按照下面的格式，年月日排序
-$ sort -k 3,7nbr -k 3.1nbr -k 3.4nbr distros.txt
+$ sort -k 3.7nbr -k 3.1nbr -k 3.4nbr distros.txt
 Fedora 10 11/25/2008
 Ubuntu 8.10 10/30/2008
 SUSE 11.0 06/19/2008
