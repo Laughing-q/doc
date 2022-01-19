@@ -106,7 +106,7 @@ Server = https://repo.huaweicloud.com/archlinuxcn/$arch # 华为开源镜像站
 
 - tools
 ```shell
-yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler ranger lf nodejs npm lazygit htop fzf fd libnotify xclip
+yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip
 sudo npm install fanyi -g
 sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
@@ -125,7 +125,8 @@ yay -S baidunetdisk-electron wechat-uos
 yay -S anaconda
 # 防止anaconda安装的curl干扰出问题
 rm /opt/anaconda/bin/curl
-pip install pywal ueberzug
+# ranger需要用pip安装，否则rnvimr无法读取到ranger配置文件
+pip install pywal ueberzug ranger-fm pynvim
 ```
 
 ## 字体
