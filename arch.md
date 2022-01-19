@@ -106,7 +106,7 @@ Server = https://repo.huaweicloud.com/archlinuxcn/$arch # 华为开源镜像站
 
 - tools
 ```shell
-yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip
+yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev
 sudo npm install fanyi -g
 sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
@@ -171,6 +171,15 @@ git clone https://github.com/Laughing-q/nvim.git ~/.config/nvim
 cd ~/.config/nvim
 ./install.sh
 ```
+
+## format
+```shell
+yay -S black yapf stylua luacheck shfmt shellcheck 
+yay -S clang-format-all-git
+pip install cmakelang
+sudo npm install --global prettier
+```
+
 
 ## 输入法
 ```shell
