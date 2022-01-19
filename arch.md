@@ -165,7 +165,7 @@ git clone https://github.com/Laughing-q/wallpapers.git
 
 ## nvim
 ```shell
-yay -S nvim
+yay -S neovim
 pip install pynvim
 git clone https://github.com/Laughing-q/nvim.git ~/.config/nvim
 cd ~/.config/nvim
