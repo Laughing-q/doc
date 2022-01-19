@@ -181,8 +181,15 @@ QT_IM_MODULE  DEFAULT=fcitx
 XMODIFIERS    DEFAULT=\@im=fcitx
 ```
 
-
 ## Finally
 ```shell
 reboot
 ```
+
+## Git
+```shell
+git config --global user.name "Laughing-q"
+git config --global user.email "1182102784@qq.com"
+git config --global credential.helper store
+```
+
