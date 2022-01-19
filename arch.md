@@ -1,4 +1,5 @@
 ## 安装教程
+- [https://wiki.archlinux.org/title/Installation_guide](https://wiki.archlinux.org/title/Installation_guide)(recommend)
 - [https://archlinuxstudio.github.io/ArchLinuxTutorial](https://archlinuxstudio.github.io/ArchLinuxTutorial)
 - [https://arch.icekylin.online/](https://arch.icekylin.online/)
 
@@ -20,9 +21,6 @@ EDITOR=vim visudo
 # 去掉这一行的注释
 #%wheel ALL=(ALL) ALL
 ```
-
-<++>
-
 
 ## First
 拔掉U盘之前需要安装的
@@ -95,21 +93,39 @@ makepkg -si
 ```
 
 ## 软件
+- archlinuxcn
+```shell
+vim /etc/pacman.conf
+# 加入其中一个即可
+[archlinuxcn]
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch # 中国科学技术大学开源镜像站
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch # 清华大学开源软件镜像站
+Server = https://mirrors.hit.edu.cn/archlinuxcn/$arch # 哈尔滨工业大学开源镜像站
+Server = https://repo.huaweicloud.com/archlinuxcn/$arch # 华为开源镜像站
+```
+
 - tools
 ```shell
-yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler ranger lf nodejs npm lazygit htop fzf fd
+yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler ranger lf nodejs npm lazygit htop fzf fd libnotify xclip
 sudo npm install fanyi -g
+sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
 cp /etc/xdg/picom.conf ~/.config/picom/
 git clone https://github.com/wting/autojump.git
 cd autojump && ./install.
 cd
 ```
+
+```shell
+yay -S baidunetdisk-electron wechat-uos
+```
+
 - anaconda
 ```shell
 yay -S anaconda
 # 防止anaconda安装的curl干扰出问题
 rm /opt/anaconda/bin/curl
+pip install pywal ueberzug
 ```
 
 ## 字体
@@ -132,7 +148,7 @@ sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel
 ```shell
 sudo pacman -S nvidia nvidia-utils nvidia-settings
 # 只有使用独显运行下面这一句生成配置文件，如果仅nvidia-smi则不需要
-nvidia-sconfig
+nvidia-xconfig
 ```
 
 ## nvidia
@@ -154,6 +170,17 @@ git clone https://github.com/Laughing-q/nvim.git ~/.config/nvim
 cd ~/.config/nvim
 ./install.sh
 ```
+
+## 输入法
+```shell
+yay -S fcitx fcitx-configtool fcitx-sogoupinyin
+vim ~/.pam_environment
+
+GTK_IM_MODULE DEFAULT=fcitx
+QT_IM_MODULE  DEFAULT=fcitx
+XMODIFIERS    DEFAULT=\@im=fcitx
+```
+
 
 ## Finally
 ```shell
