@@ -106,7 +106,7 @@ Server = https://repo.huaweicloud.com/archlinuxcn/$arch # 华为开源镜像站
 
 - tools
 ```shell
-yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev
+yay -S zathura zarhura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev pulseaudio highlight perl-image-exiftool ctags
 sudo npm install fanyi -g
 sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
@@ -194,6 +194,10 @@ XMODIFIERS    DEFAULT=\@im=fcitx
 ## Finally
 ```shell
 reboot
+# 如果开机未自启音频
+pulseaudio --start
+# 如果PulseAudio未运行而且正在使用X11，运行下面的命令可以在启动PulseAudio的同时加载需要的X11插件
+start-pulseaudio-x11
 ```
 
 ## Git
