@@ -5,3 +5,6 @@
 - LaTex
   * 在线编辑和模版: [https://www.sharelatex.com/](https://www.sharelatex.com/)
   * 生成图表: [https://www.tablesgenerator.com/#](https://www.tablesgenerator.com/#)
+
+- books
+  * [https://z-lib.org](https://z-lib.org)
