@@ -4,6 +4,6 @@ git-credential-manager-core configure
 
 git config --global credential.credentialStore cache
 
-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
+code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
 
 git config --global credential.helper store
