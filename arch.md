@@ -33,7 +33,7 @@ systemctl enable NetworkManager sshd
 ```shell
 sudo su
 mkdir /opt/clash && cd /opt/clash
-wget https://dl3.ssrss.club/clash-linux-amd64-v1.8.0.gz  
+wget https://dl3.ssrss.club/clash-linux-amd64-v1.9.0.gz  
 wget -O /opt/clash/config.yaml "https://new.ssrss.de/sub?target=clash&new_name=true&url=https%3A%2F%2Fssrss.de%2Fs%2FPZDtd&udp=true&tfo=true&config=https%3A//ssrss.de/ssrss.ini"
 wget https://dl3.ssrss.club/Country.mmdb
 gunzip -c *.gz > clash && chmod +x clash
