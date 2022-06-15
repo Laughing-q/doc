@@ -102,17 +102,20 @@ Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch # 中国科学技术大�
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch # 清华大学开源软件镜像站
 Server = https://mirrors.hit.edu.cn/archlinuxcn/$arch # 哈尔滨工业大学开源镜像站
 Server = https://repo.huaweicloud.com/archlinuxcn/$arch # 华为开源镜像站
+
+sudo pacman -S archlinuxcn-keyring
+sudo pacman -Sy
 ```
 
 - tools
 ```shell
-yay -S zathura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev pulseaudio highlight perl-image-exiftool ctags xdotool bmon feh kchmviewer
+yay -S zathura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev pulseaudio highlight perl-image-exiftool ctags xdotool bmon feh kchmviewer imagemagick
 sudo npm install fanyi -g
 sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
 cp /etc/xdg/picom.conf ~/.config/picom/
 git clone https://github.com/wting/autojump.git
-cd autojump && ./install.
+cd autojump && ./install.py
 cd
 ```
 
