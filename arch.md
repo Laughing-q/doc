@@ -109,7 +109,7 @@ sudo pacman -Sy
 
 - tools
 ```shell
-yay -S zathura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev pulseaudio highlight perl-image-exiftool ctags xdotool bmon feh kchmviewer imagemagick
+yay -S zathura zathura-pdf-mupdf unclutter sxiv mpv maim xwallpaper youtube-dl xsel mpd mpc ncmpcpp picom pamixer dunst light-git task-spooler lf nodejs npm lazygit htop fzf fd libnotify xclip libgtk2.0-dev pulseaudio highlight perl-image-exiftool ctags xdotool bmon feh kchmviewer imagemagick pulsemixer pamixer
 sudo npm install fanyi -g
 sudo npm -g install instant-markdown-d
 mkdir -p ~/.config/picom
@@ -151,6 +151,8 @@ sudo pacman -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel
 - nvidia显卡
 ```shell
 sudo pacman -S nvidia nvidia-utils nvidia-settings
+# 如果遇到内核起不起nvidia: traps: Missing ENDBR: _nv011433rm+0x0/0x10 [nvidia]
+# 需要安装nvidia-open补丁
 # 只有使用独显运行下面这一句生成配置文件，如果仅nvidia-smi则不需要
 nvidia-xconfig
 ```
