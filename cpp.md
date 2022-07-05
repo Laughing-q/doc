@@ -556,4 +556,227 @@ string s3 = s1 + s2;
 s1 += s2;     // 等价于s1 = s1 + s2
 ```
 **字面值和string对象相加**
+- 当把`string`对象和字符字面值以及字符串字面值混在一条语句中使用时，必须确保每个加法运算法(+)的两侧至少有一个是`string`
+```cpp
+string s1 = "hello", s2 = "world";
+string s3 = s1 + ", " + s2 + "\n";
+string s4 = s1 + ", ";
+string s5 = "hello" + ", ";    // 错误，两个运算对象都不是string
+string s6 = s1 + ", " + "world";   // 正确：s1和", "首先相加得到一个string再与“world”相加
+string s6 = (s1 + ", ") + "world"; // 等价于上一行
+string s7 = "hello" + ", " + s2;  // 错误：不能把字面值直接相加
+```
 
+### 处理string对象中的字符
+
+- **ctype.h vs. cctype**：C++修改了c的标准库，名称为去掉`.h`，前面加`c`。
+  > 如c++版本为`cctype`，c版本为`ctype.h`
+  - **尽量使用c++版本的头文件**，即`cctype`
+
+`cctype`头文件中定义了一组标准函数：
+
+| 函数          | 解释                                                                      |
+|---------------|---------------------------------------------------------------------------|
+| `isalnum(c)`  | 当`c`是字母或数字时为真                                                   |
+| `isalpha(c)`  | 当`c`是字母时为真                                                         |
+| `iscntrl(c)`  | 当`c`是控制字符时为真                                                     |
+| `isdigit(c)`  | 当`c`是数字时为真                                                         |
+| `isgraph(c)`  | 当`c`不是空格但可以打印时为真                                             |
+| `islower(c)`  | 当`c`是小写字母时为真                                                     |
+| `isprint(c)`  | 当`c`是可打印字符时为真                                                   |
+| `ispunct(c)`  | 当`c`是标点符号时为真                                                     |
+| `isspace(c)`  | 当`c`是空白时为真（空格、横向制表符、纵向制表符、回车符、换行符、进纸符） |
+| `isupper(c)`  | 当`c`是大写字母时为真                                                     |
+| `isxdigit(c)` | 当`c`是十六进制数字时为真                                                 |
+| `tolower(c)`  | 当`c`是大写字母，输出对应的小写字母；否则原样输出`c`                      |
+| `toupper(c)`  | 当`c`是小写字母，输出对应的大写字母；否则原样输出`c`                      |
+
+**遍历字符**
+- C++新标准提供for
+```cpp
+/*
+expression部分是一个对象，表示一个序列
+declaration负责定义一个变量，用于访问序列中的基础元素
+每次迭代，declaration部分变量会被初始化为expression的下一个元素
+*/
+for (declaration: expression)
+  statement
+```
+```cpp
+string str("some string");
+// 每行输出一个字符
+for (auto c: str)
+  cout << c << endl;
+```
+```cpp
+string s("Hello World!!!");
+decltype(s.size()) punct_cnt = 0;
+// 统计s中的标点符号数量
+for (auto c : s)
+  if (ispunct(c))
+    ++punct_cnt;
+count << punct_cnt
+      << " punctuation characters in " << s << endl;
+```
+
+**使用范围for语句改变字符串中的字符**
+- 如果想要改变string对象中的字符值，必须把循环变量定义成引用类型
+```cpp
+string s("Hello World!!!");
+// 转换成大写形式
+for (auto &c : s)
+  c = toupper(c);
+count << s<< endl
+```
+**下标索引**
+- `str[x]`,[]输入参数为`string::size_type`类型，给出`int`整型也会自动转化为该类型
+```cpp
+string s("somge string");
+if (!s.empty())
+  s[0] = toupper(s[0])
+
+// 依次处理s中的字符直至我们处理完全部字符或者遇到一个空白
+for (decltype(s.size()) index = 0;
+    index != s.size() && !isspace(s[index]); ++index)
+      s[index] = toupper(s[index]);
+```
+
+**使用下标执行随机访问**
+```cpp
+const string hexdigits = "0123456789ABCDEF";
+cout << "Enter a series of numbers between 0 and 15"
+     << " separated by spaces. Hit Enter when finished: "
+     << endl;
+string result;
+string::size_type n;
+while (cin >> n)
+  if (n < hexdigits.size())
+    result += hexdigits[n];
+count << "Your hex number is: " << result <<endl;
+```
+## vector
+- vector是一个**容器**，也是一个类模板；
+- 容器：包含其他对象。
+- 类模板：本身不是类，但可以**实例化instantiation**出一个类。 `vector`是一个模板， `vector<int>`是一个类型。
+
+```cpp
+#include <vector>
+using std::vector;
+vector<int> ivec;    // ivec保存int类型的对象
+vector<vector<string>> file;   // 该向量的元素是vector对象
+```
+
+### 定义和初始化vector对象
+
+初始化`vector`对象的方法
+
+| 方法                        | 解释                                                          |
+|-----------------------------|---------------------------------------------------------------|
+| `vector<T> v1`              | `v1`是一个空`vector`，它潜在的元素是`T`类型的，执行默认初始化 |
+| `vector<T> v2(v1)`          | `v2`中包含有`v1`所有元素的副本                                |
+| `vector<T> v2 = v1`         | 等价于`v2(v1)`，`v2`中包含`v1`所有元素的副本                  |
+| `vector<T> v3(n, val)`      | `v3`包含了n个重复的元素，每个元素的值都是`val`                |
+| `vector<T> v4(n)`           | `v4`包含了n个重复地执行了值初始化的对象                       |
+| `vector<T> v5{a, b, c...}`  | `v5`包含了初始值个数的元素，每个元素被赋予相应的初始值        |
+| `vector<T> v5={a, b, c...}` | 等价于`v5{a, b, c...}`                                        |
+
+- 列表初始化： `vector<string> v{"a", "an", "the"};` （C++11）
+
+### 向vector对象中添加元素
+
+- `v.push_back(e)` 在尾部增加元素。
+```cpp
+#include <vector>
+using std::vector;
+vector<int> v2;
+for (int i = 0; i != 100; ++i)
+  v2.push_back(i);
+
+```
+
+### 其他vector操作
+
+`vector`支持的操作：
+
+| 操作               | 解释                                                             |
+|--------------------|------------------------------------------------------------------|
+| `v.emtpy()`        | 如果`v`不含有任何元素，返回真；否则返回假                        |
+| `v.size()`         | 返回`v`中元素的个数                                              |
+| `v.push_back(t)`   | 向`v`的尾端添加一个值为`t`的元素                                 |
+| `v[n]`             | 返回`v`中第`n`个位置上元素的**引用**                             |
+| `v1 = v2`          | 用`v2`中的元素拷贝替换`v1`中的元素                               |
+| `v1 = {a,b,c...}`  | 用列表中元素的拷贝替换`v1`中的元素                               |
+| `v1 == v2`         | `v1`和`v2`相等当且仅当它们的元素数量相同且对应位置的元素值都相同 |
+| `v1 != v2`         | 同上                                                             |
+| `<`,`<=`,`>`, `>=` | 以字典顺序进行比较                                               |
+
+```cpp
+vector<int> v{1, 2, 3, 4, 5, 6, 7, 8, 9};
+for (auto &i : v)
+  i *= i;
+for (auto i : v)
+  cout << i << " ";
+cout << endl;
+```
+
+```cpp
+vector<unsigned> scores(11, 0)
+unsigned grade;
+while (cin >> grade) {
+    if (grade <= 100)
+      ++score[grade/10];
+  }
+```
+
+## 迭代器
+- 所有标准库容器都可以使用迭代器。
+- 类似于指针类型，迭代器也提供了对对象的间接访问。
+
+- `auto b = v.begin();`返回指向第一个元素的迭代器。
+- `auto e = v.end();`返回指向最后一个元素的下一个（哨兵，尾后,one past the end）的迭代器（off the end）。
+- 如果容器为空，则begin和end返回的是同一个迭代器，都是尾后迭代器
+
+- 使用解引用符`*`访问迭代器指向的元素。
+- 养成使用迭代器和`!=`的习惯（泛型编程）。
+- **容器**：可以包含其他对象；但所有的对象必须类型相同。
+- **迭代器（iterator）**：每种标准容器都有自己的迭代器。`C++`倾向于用迭代器而不是下标遍历元素。
+- **const_iterator**：只能读取容器内元素不能改变。
+- **箭头运算符**： 解引用 + 成员访问，`it->mem`等价于 `(*it).mem`
+- **谨记**：但凡是使用了**迭代器**的循环体，都**不要**向迭代器所属的容器**添加元素**。
+
+标准容器迭代器的运算符:
+
+| 运算符           | 解释                                   |
+|------------------|----------------------------------------|
+| `*iter`          | 返回迭代器`iter`所指向的**元素的引用** |
+| `iter->mem`      | 等价于`(*iter).mem`                    |
+| `++iter`         | 令`iter`指示容器中的下一个元素         |
+| `--iter`         | 令`iter`指示容器中的上一个元素         |
+| `iter1 == iter2` | 判断两个迭代器是否相等                 |
+
+```cpp
+string s("some string");
+if (s.begin() != s.end()) {
+    auto it = s.begin();
+    *it = toupper(*it);
+  }
+```
+
+**将迭代器从一个元素移动到另一个元素(++运算符)**
+```cpp
+for (auto it = s.begin(); it != s.end() && !isspace(*it); ++it)
+  *it = toupper(*it);
+```
+
+**迭代器类型**
+
+```cpp
+// 一般来说不知道迭代器的精确类型，采用iterator和const_iterator表示迭代器类型
+vector<int>iterator it;     // it能读写vector<int>的元素
+string::iterator it2;       // it2能读写string对象中的字符
+
+vector<int>::const_iterator it3;  // it3只能读元素，不能写元素
+string::const_iterator it4;  // it4只能读字符，不能写字符
+```
+
+<++>
